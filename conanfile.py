@@ -34,8 +34,14 @@ conan_basic_setup()''')
     def build(self):
         cmake = CMake(self)
 
+        # Note that static lib will always be generated according to HDF5
+        # CMakeLists.txt file. The shared option here only controls if the
+        # shared library will also be generated or not.
         if self.options["shared"]:
             cmake.definitions["BUILD_SHARED_LIBS"] = "ON"
+        else:
+            cmake.definitions["BUILD_SHARED_LIBS"] = "OFF"
+
         cmake.definitions["HDF5_BUILD_EXAMPLES"] = "OFF"
         cmake.definitions["HDF5_BUILD_TOOLS"] = "ON"
         cmake.definitions["HDF5_BUILD_HL_LIB"] = "OFF"
