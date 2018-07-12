@@ -62,5 +62,6 @@ conan_basic_setup()''')
         else:
             self.cpp_info.libs = ["hdf5_debug"]
 
-        if not self.options.shared:
-            self.cpp_info.libs.append("dl")
+        # It seems we need to link with the dl library even when shared
+        # libraries are not build (maybe because of dependencies)
+        self.cpp_info.libs.append("dl")
