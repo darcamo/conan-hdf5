@@ -29,6 +29,9 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()''')
 
     def configure(self):
+        # We are not building the C++ binding thus libcxx does not matter
+        del self.settings.compiler.libcxx
+
         self.options["zlib"].shared = self.options.shared
 
     def build(self):
