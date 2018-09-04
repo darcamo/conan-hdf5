@@ -5,9 +5,9 @@ import shutil
 
 class Hdf5Conan(ConanFile):
     name = "HDF5"
-    version = "1.10.2"
+    version = "1.10.3"
     license = "BSD-style Open Source or Comercial"
-    url = "https://github.com/darcamo/conan-recipes"
+    url = "https://github.com/darcamo/conan-hdf5"
     author = "Darlan Cavalcante Moreira (darcamo@gmail.com)"
     description = "HDF5 is a data model, library, and file format for storing and managing data."
     settings = "os", "compiler", "build_type", "arch"
@@ -21,33 +21,10 @@ class Hdf5Conan(ConanFile):
         git.clone("https://bitbucket.hdfgroup.org/scm/hdffv/hdf5.git",
                   "hdf5-{0}".format(self.version.replace(".", "_")))
 
-        tools.replace_in_file("sources/CMakeLists.txt", "PROJECT (HDF5 C CXX)",
-                              '''PROJECT(HDF5 C CXX)
+        tools.replace_in_file("sources/CMakeLists.txt", "project (HDF5 C)",
+                              '''project (HDF5 C)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()''')
-
-        # Version 1.10.2 of HDF5 added the macro HDF_NO_UBSAN after the
-        # following functions that is replaced by an atribute. However, this is
-        # not valid in GCC and the atribute must come before the function. For
-        # each of these functions we call the tools.replace_in_file function to
-        # put the macro before the function name.
-        funcs = [
-            "detect_C89_integers(void)",
-            "detect_C89_floats(void)",
-            "detect_C99_integers8(void)",
-            "detect_C99_integers16(void)",
-            "detect_C99_integers32(void)",
-            "detect_C99_integers64(void)",
-            "detect_C99_integers(void)",
-            "detect_C99_floats(void)",
-            "detect_alignments(void)",
-            "main(void)"
-        ]
-        # main(void)
-        for f in funcs:
-            tools.replace_in_file("sources/src/H5detect.c",
-                                  "{} HDF_NO_UBSAN".format(f),
-                                  "HDF_NO_UBSAN {}".format(f))
 
     def configure(self):
         # We are not building the C++ binding thus libcxx does not matter
