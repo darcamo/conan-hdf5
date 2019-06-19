@@ -1,6 +1,8 @@
-from conans import ConanFile, CMake, tools
+# pylint: disable=C0111
+
 import os
 import shutil
+from conans import ConanFile, CMake, tools
 
 
 class Hdf5Conan(ConanFile):
@@ -9,7 +11,8 @@ class Hdf5Conan(ConanFile):
     license = "BSD-style Open Source or Comercial"
     url = "https://github.com/darcamo/conan-hdf5"
     author = "Darlan Cavalcante Moreira (darcamo@gmail.com)"
-    description = "HDF5 is a data model, library, and file format for storing and managing data."
+    description = ("HDF5 is a data model, library, and file format for "
+                   "storing and managing data.")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
@@ -18,8 +21,14 @@ class Hdf5Conan(ConanFile):
 
     def source(self):
         git = tools.Git(folder="sources")
-        git.clone("https://bitbucket.hdfgroup.org/scm/hdffv/hdf5.git",
-                  "hdf5-{0}".format(self.version.replace(".", "_")))
+        try:
+            git.clone("https://bitbucket.hdfgroup.org/scm/hdffv/hdf5.git",
+                      "hdf5-{0}".format(self.version.replace(".", "_")))
+        except:
+            # If we failed to clone from the original git repository, we try to
+            # clone HDF5 from a github mirror
+            git.clone("https://github.com/live-clones/hdf5.git",
+                      "hdf5-{0}".format(self.version.replace(".", "_")))
 
         tools.replace_in_file("sources/CMakeLists.txt", "project (HDF5 C)",
                               '''project (HDF5 C)
@@ -46,8 +55,8 @@ conan_basic_setup()''')
         cmake.install()
 
     def package_info(self):
-            # The HDF5 library has different names depending if it is a release
-            # of a debug build
+        # The HDF5 library has different names depending if it is a release
+        # of a debug build
         if self.settings.build_type == "Release":
             self.cpp_info.libs = ["hdf5"]
         else:
