@@ -21,14 +21,14 @@ class Hdf5Conan(ConanFile):
 
     def source(self):
         git = tools.Git(folder="sources")
-        try:
-            git.clone("https://bitbucket.hdfgroup.org/scm/hdffv/hdf5.git",
-                      "hdf5-{0}".format(self.version.replace(".", "_")))
-        except:
-            # If we failed to clone from the original git repository, we try to
-            # clone HDF5 from a github mirror
-            git.clone("https://github.com/live-clones/hdf5.git",
-                      "hdf5-{0}".format(self.version.replace(".", "_")))
+        # try:
+        #     git.clone("https://bitbucket.hdfgroup.org/scm/hdffv/hdf5.git",
+        #               "hdf5-{0}".format(self.version.replace(".", "_")))
+        # except:
+        #     # If we failed to clone from the original git repository, we try to
+        #     # clone HDF5 from a github mirror
+        git.clone("https://github.com/live-clones/hdf5.git",
+                  "hdf5-{0}".format(self.version.replace(".", "_")))
 
         tools.replace_in_file("sources/CMakeLists.txt", "project (HDF5 C)",
                               '''project (HDF5 C)
