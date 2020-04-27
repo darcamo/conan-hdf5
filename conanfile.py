@@ -17,7 +17,7 @@ class Hdf5Conan(ConanFile):
     options = {"shared": [True, False]}
     default_options = "shared=True"
     generators = "cmake"
-    requires = "zlib/1.2.11@conan/stable"
+    requires = "zlib/1.2.11"
 
     def source(self):
         git = tools.Git(folder="sources")
@@ -27,8 +27,9 @@ class Hdf5Conan(ConanFile):
         # except:
         #     # If we failed to clone from the original git repository, we try to
         #     # clone HDF5 from a github mirror
+        tag_name = "hdf5-{0}".format(self.version.replace(".", "_"))
         git.clone("https://github.com/live-clones/hdf5.git",
-                  "hdf5-{0}".format(self.version.replace(".", "_")))
+                  tag_name)
 
         tools.replace_in_file("sources/CMakeLists.txt", "project (HDF5 C)",
                               '''project (HDF5 C)
