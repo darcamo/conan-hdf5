@@ -7,7 +7,7 @@ from conans import ConanFile, CMake, tools
 
 class Hdf5Conan(ConanFile):
     name = "HDF5"
-    version = "1.10.5"
+    version = "1.10.6"
     license = "BSD-style Open Source or Comercial"
     url = "https://github.com/darcamo/conan-hdf5"
     author = "Darlan Cavalcante Moreira (darcamo@gmail.com)"
