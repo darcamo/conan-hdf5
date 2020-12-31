@@ -39,6 +39,10 @@ conan_basic_setup()''')
     def configure(self):
         # We are not building the C++ binding thus libcxx does not matter
         del self.settings.compiler.libcxx
+        if self.options.shared:
+            self.options["zlib"].shared = True
+        else:
+            self.options["zlib"].shared = False
 
     def build(self):
         cmake = CMake(self)
